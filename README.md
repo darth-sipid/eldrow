@@ -1,1 +1,0 @@
-Data derived from https://en.lexipedia.org
