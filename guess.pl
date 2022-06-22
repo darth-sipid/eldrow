@@ -14,7 +14,7 @@ my @blacklist = [];
 my $known_right = ["*", "*", "*", "*", "*"];
 my $known_good = {};
 my $known_wrong = {};
-my $known_wrong_possitions = { # 0 denotes not known; 1 denotes known wrong
+my $known_wrong_possitions = { # 0 denotes not known (or known right); 1 denotes known wrong
     "a" => [0,0,0,0,0], "b" => [0,0,0,0,0], "c" => [0,0,0,0,0], "d" => [0,0,0,0,0], "e" => [0,0,0,0,0], 
     "f" => [0,0,0,0,0], "g" => [0,0,0,0,0], "h" => [0,0,0,0,0], "i" => [0,0,0,0,0], "j" => [0,0,0,0,0], 
     "k" => [0,0,0,0,0], "l" => [0,0,0,0,0], "m" => [0,0,0,0,0], "n" => [0,0,0,0,0], "o" => [0,0,0,0,0], 
