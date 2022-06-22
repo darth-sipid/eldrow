@@ -10,6 +10,7 @@ my $guess = "scare";
 # chomp $guess;
 
 my $rows = [];
+my @blacklist = [];
 my $known_right = ["*", "*", "*", "*", "*"];
 my $known_good = {};
 my $known_wrong = {};
@@ -23,15 +24,7 @@ my $known_wrong_possitions = { # 0 denotes not known; 1 denotes known wrong
 };
 
 TRIAL: for (my $i = 0; $i < 6; $i++) {
-    print "Is the word '$guess'? (y/n)\n";
-    my $answer = <STDIN>;
-    chomp $answer;
-
-    if (($answer eq "y") || ($answer eq "Y")) {
-        $$rows[$i] = "22222";
-        print_and_exit();
-    }
-
+    print "Is the word '$guess'?\n";
     print "\nEnter pattern\n";
     print "  0 for wrong (⬛),\n";
     print "  1 for right letter wrong place (🟨),\n";
@@ -41,33 +34,38 @@ TRIAL: for (my $i = 0; $i < 6; $i++) {
     while (1) {
         $pattern = <STDIN>;
         chomp $pattern;
-        if ($pattern eq "") {
-            $i--;
-            next TRIAL;
+        if ($pattern eq "22222") {
+            $$rows[$i] = "22222";
+            print_and_exit();
         }
         $$rows[$i] = $pattern;
         last if $pattern =~ /[012]{5}/;
         print "Try again.\n";
     }
-    my @possitions = split(//, $pattern);
-    my @letters = split(//, $guess);
-    for (my $j = 0; $j < scalar @possitions; $j++) {
-        if ($possitions[$j] eq "0") {
-            $$known_wrong{$letters[$j]} = 1;
+    if ($pattern eq "") {
+        $i--;
+        push(@blacklist, $guess);
+    } else {
+        my @possitions = split(//, $pattern);
+        my @letters = split(//, $guess);
+        for (my $j = 0; $j < scalar @possitions; $j++) {
+            if ($possitions[$j] eq "0") {
+                $$known_wrong{$letters[$j]} = 1;
+            }
         }
-    }
-    for (my $j = 0; $j < scalar @possitions; $j++) {
-        if ($possitions[$j] eq "1") {
-            $$known_wrong_possitions{$letters[$j]}[$j] = 1;
-            delete $$known_wrong{$letters[$j]};
-            $$known_good{$letters[$j]} = 1;
+        for (my $j = 0; $j < scalar @possitions; $j++) {
+            if ($possitions[$j] eq "1") {
+                $$known_wrong_possitions{$letters[$j]}[$j] = 1;
+                delete $$known_wrong{$letters[$j]};
+                $$known_good{$letters[$j]} = 1;
+            }
         }
-    }
-    for (my $j = 0; $j < scalar @possitions; $j++) {
-        if ($possitions[$j] eq "2") {
-            $$known_right[$j] = $letters[$j];
-            delete $$known_wrong{$letters[$j]};
-            $$known_good{$letters[$j]} = 1;
+        for (my $j = 0; $j < scalar @possitions; $j++) {
+            if ($possitions[$j] eq "2") {
+                $$known_right[$j] = $letters[$j];
+                delete $$known_wrong{$letters[$j]};
+                $$known_good{$letters[$j]} = 1;
+            }
         }
     }
     seek DATA, $data_start, 0;
@@ -75,6 +73,10 @@ TRIAL: for (my $i = 0; $i < 6; $i++) {
         chomp;
         $word = $_;
         @word_letters = split(//, $word);
+        # Skip words on the black list
+        foreach (@blacklist) $bad {
+            next DATA if $bad eq $word;
+        }
         # If the word contains incorrect characters, move on
         for (my $k = 0; $k < 5; $k++) {
             next DATA if $$known_wrong{$word_letters[$k]};
@@ -105,6 +107,8 @@ print_and_exit();
 
 sub print_and_exit {
     my $last_guess;
+    my $score = scalar @$rows;
+    print "$score/6\n";
     foreach(@$rows) {
         s/0/⬛/g;
         s/1/🟨/g;
