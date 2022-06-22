@@ -25,7 +25,7 @@ my $known_wrong_possitions = { # 0 denotes not known; 1 denotes known wrong
 
 TRIAL: for (my $i = 0; $i < 6; $i++) {
     print "Is the word '$guess'?\n";
-    print "\nEnter pattern\n";
+    print "Enter pattern\n";
     print "  0 for wrong (⬛),\n";
     print "  1 for right letter wrong place (🟨),\n";
     print "  2 for right letter right place (🟩).\n";
@@ -40,8 +40,10 @@ TRIAL: for (my $i = 0; $i < 6; $i++) {
         }
         $$rows[$i] = $pattern;
         last if $pattern =~ /[012]{5}/;
+        last if $pattern eq "";
         print "Try again.\n";
     }
+    print "\n";
     if ($pattern eq "") {
         $i--;
         push(@blacklist, $guess);
@@ -74,7 +76,7 @@ TRIAL: for (my $i = 0; $i < 6; $i++) {
         $word = $_;
         @word_letters = split(//, $word);
         # Skip words on the black list
-        foreach (@blacklist) $bad {
+        foreach $bad (@blacklist) {
             next DATA if $bad eq $word;
         }
         # If the word contains incorrect characters, move on
@@ -108,7 +110,7 @@ print_and_exit();
 sub print_and_exit {
     my $last_guess;
     my $score = scalar @$rows;
-    print "$score/6\n";
+    print "\n$score/6\n";
     foreach(@$rows) {
         s/0/⬛/g;
         s/1/🟨/g;
