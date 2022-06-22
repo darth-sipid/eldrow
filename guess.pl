@@ -3,11 +3,10 @@
 my $data_start = tell DATA;
 
 my $word;
-my $guess = "scare";
-
-# srand;
-# rand($.) > ($.-3) && ($guess = $_) while <DATA>;
-# chomp $guess;
+# https://www.gamespot.com/articles/wordle-best-starting-words-to-use-and-other-game-tips/1100-6499460/
+my @seed_words = qw(react adieu later sired tears alone arise about atone irate
+                    snare cream paint worse sauce anime prowl roast drape media);
+my $guess = $seed_words[rand @seed_words];
 
 my $rows = [];
 my @blacklist = [];
