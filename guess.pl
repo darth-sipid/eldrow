@@ -10,7 +10,6 @@ my $guess = "scare";
 # chomp $guess;
 
 my $rows = [];
-my @guesses = ["racer"];
 my $known_right = ["*", "*", "*", "*", "*"];
 my $known_good = {};
 my $known_wrong = {};
