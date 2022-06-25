@@ -10,7 +10,7 @@ my $guess = $seed_words[rand @seed_words];
 
 my $rows = [];
 my @blacklist = [];
-my $known_right = ["*", "*", "*", "*", "*"];
+my $known_right = qw(* * * * *);
 my $known_good = {};
 my $known_wrong = {};
 my $known_wrong_possitions = { # 0 denotes not known (or known right); 1 denotes known wrong
