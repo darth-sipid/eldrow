@@ -13,7 +13,7 @@ my @blacklist = [];
 my $known_right = qw(* * * * *);
 my $known_good = {};
 my $known_wrong = {};
-my $known_wrong_possitions = { # 0 denotes not known (or known right); 1 denotes known wrong
+my $known_wrong_positions = { # 0 denotes not known (or known right); 1 denotes known wrong
     "a" => [0,0,0,0,0], "b" => [0,0,0,0,0], "c" => [0,0,0,0,0], "d" => [0,0,0,0,0], "e" => [0,0,0,0,0], 
     "f" => [0,0,0,0,0], "g" => [0,0,0,0,0], "h" => [0,0,0,0,0], "i" => [0,0,0,0,0], "j" => [0,0,0,0,0], 
     "k" => [0,0,0,0,0], "l" => [0,0,0,0,0], "m" => [0,0,0,0,0], "n" => [0,0,0,0,0], "o" => [0,0,0,0,0], 
@@ -24,9 +24,9 @@ my $known_wrong_possitions = { # 0 denotes not known (or known right); 1 denotes
 
 TRIAL: for (my $i = 0; $i < 6; $i++) {
     print "Is the word '$guess'?\n";
-    print "Enter pattern\n";
-    print "  0 for wrong (⬛),\n";
-    print "  1 for right letter wrong place (🟨),\n";
+    print "Enter pattern.\n";
+    print "  0 for wrong (⬛).\n";
+    print "  1 for right letter wrong place (🟨).\n";
     print "  2 for right letter right place (🟩).\n";
     print "  If my guess isn't in the world list, just press Enter.\n";
     my $pattern;
@@ -47,22 +47,22 @@ TRIAL: for (my $i = 0; $i < 6; $i++) {
         $i--;
         push(@blacklist, $guess);
     } else {
-        my @possitions = split(//, $pattern);
+        my @positions = split(//, $pattern);
         my @letters = split(//, $guess);
-        for (my $j = 0; $j < scalar @possitions; $j++) {
-            if ($possitions[$j] eq "0") {
+        for (my $j = 0; $j < scalar @positions; $j++) {
+            if ($positions[$j] eq "0") {
                 $$known_wrong{$letters[$j]} = 1;
             }
         }
-        for (my $j = 0; $j < scalar @possitions; $j++) {
-            if ($possitions[$j] eq "1") {
-                $$known_wrong_possitions{$letters[$j]}[$j] = 1;
+        for (my $j = 0; $j < scalar @positions; $j++) {
+            if ($positions[$j] eq "1") {
+                $$known_wrong_positions{$letters[$j]}[$j] = 1;
                 delete $$known_wrong{$letters[$j]};
                 $$known_good{$letters[$j]} = 1;
             }
         }
-        for (my $j = 0; $j < scalar @possitions; $j++) {
-            if ($possitions[$j] eq "2") {
+        for (my $j = 0; $j < scalar @positions; $j++) {
+            if ($positions[$j] eq "2") {
                 $$known_right[$j] = $letters[$j];
                 delete $$known_wrong{$letters[$j]};
                 $$known_good{$letters[$j]} = 1;
@@ -84,7 +84,7 @@ TRIAL: for (my $i = 0; $i < 6; $i++) {
         }
         # if the word has a correct character in the wrong place, move on
         for (my $k = 0; $k < 5; $k++) {
-            next DATA if $$known_wrong_possitions{$word_letters[$k]}[$k];
+            next DATA if $$known_wrong_positions{$word_letters[$k]}[$k];
         }
         # if the word has an incorrect character where a known character belongs, move on
         for (my $k = 0; $k < 5; $k++) {
