@@ -109,6 +109,7 @@ print_and_exit();
 sub print_and_exit {
     my $last_guess;
     my $score = scalar @$rows;
+    my @medels = qw(🥇 🥈 🥉 🏅 🎖 🏆);
     print "\n$score/6\n";
     foreach(@$rows) {
         s/0/⬛/g;
@@ -118,7 +119,7 @@ sub print_and_exit {
         $last_guess = $_;
     }
     if ($last_guess eq "🟩🟩🟩🟩🟩") {
-        print "I win! 🥇\n";
+        print "I win! $medels[$score - 1]\n";
     } else {
         print "I lose. 😔\n";
     }
